@@ -93,13 +93,17 @@ export default function Home() {
               Full-stack digital creator building stunning websites, mobile apps, and graphics using the latest AI tools.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Button size="lg" data-testid="button-view-work">
-                View My Work
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg" data-testid="button-get-in-touch">
-                Get in Touch
-              </Button>
+              <a href="#work">
+                <Button size="lg" data-testid="button-view-work">
+                  View My Work
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+              <a href="#contact">
+                <Button variant="outline" size="lg" data-testid="button-get-in-touch">
+                  Get in Touch
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -192,8 +196,8 @@ export default function Home() {
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
+                    {project.tags.map((tag, tagIndex) => (
+                      <Badge key={tag} variant="outline" className="text-xs" data-testid={`badge-tag-${index}-${tagIndex}`}>
                         {tag}
                       </Badge>
                     ))}
@@ -215,10 +219,12 @@ export default function Home() {
             <p className="mb-8 max-w-xl text-muted-foreground" data-testid="text-contact-subtitle">
               Ready to bring your ideas to life? Get in touch and let's create something extraordinary together.
             </p>
-            <Button size="lg" data-testid="button-contact-cta">
-              <Mail className="mr-2 h-4 w-4" />
-              Get in Touch
-            </Button>
+            <a href="mailto:hello@creativedeveloper.com">
+              <Button size="lg" data-testid="button-contact-cta">
+                <Mail className="mr-2 h-4 w-4" />
+                Get in Touch
+              </Button>
+            </a>
           </div>
         </div>
       </section>
