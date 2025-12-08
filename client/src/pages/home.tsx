@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Globe, Smartphone, Palette, Zap, Code, Mail, ArrowRight, Github, Linkedin, Twitter, Quote, ExternalLink } from "lucide-react";
+import { ContactForm } from "@/components/contact-form";
+import { Globe, Smartphone, Palette, Zap, Code, ArrowRight, Github, Linkedin, Twitter, Quote, ExternalLink } from "lucide-react";
 
 const services = [
   {
@@ -301,7 +302,13 @@ export default function Home() {
                         </Badge>
                       ))}
                     </div>
-                    <Button variant="ghost" size="sm" className="text-xs" data-testid={`button-view-case-study-${project.id}`}>
+                    <Button 
+                      type="button"
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-xs" 
+                      data-testid={`button-view-case-study-${project.id}`}
+                    >
                       {expandedProject === project.id ? "Less" : "Case Study"}
                       <ExternalLink className="ml-1 h-3 w-3" />
                     </Button>
@@ -352,22 +359,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact CTA Section */}
+      {/* Contact Section with Form */}
       <section id="contact" className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-          <div className="flex flex-col items-center text-center">
+          <div className="mb-12 text-center">
             <h2 className="mb-4 text-2xl font-semibold tracking-tight md:text-3xl" data-testid="text-contact-title">
               Let's Build Something Amazing
             </h2>
-            <p className="mb-8 max-w-xl text-muted-foreground" data-testid="text-contact-subtitle">
-              Ready to bring your ideas to life? Get in touch and let's create something extraordinary together.
+            <p className="max-w-xl mx-auto text-muted-foreground" data-testid="text-contact-subtitle">
+              Ready to bring your ideas to life? Fill out the form below and I'll get back to you within 24 hours.
             </p>
-            <a href="mailto:hello@creativedeveloper.com">
-              <Button size="lg" data-testid="button-contact-cta">
-                <Mail className="mr-2 h-4 w-4" />
-                Get in Touch
-              </Button>
-            </a>
+          </div>
+          <div className="mx-auto max-w-2xl">
+            <ContactForm />
           </div>
         </div>
       </section>
