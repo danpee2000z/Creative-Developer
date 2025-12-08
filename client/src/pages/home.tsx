@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Globe, Smartphone, Palette, Zap, Code, Mail, ArrowRight, Github, Linkedin, Twitter } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Globe, Smartphone, Palette, Zap, Code, Mail, ArrowRight, Github, Linkedin, Twitter, Quote, ExternalLink } from "lucide-react";
 
 const services = [
   {
@@ -23,32 +25,97 @@ const services = [
 
 const projects = [
   {
+    id: 1,
     title: "E-Commerce Platform",
     description: "A modern online store with seamless checkout experience",
-    tags: ["React", "Node.js", "Stripe"],
+    longDescription: "Built a complete e-commerce solution featuring product catalog, cart management, secure Stripe payments, and an admin dashboard. Implemented real-time inventory tracking and email notifications for orders.",
+    tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
     category: "Web",
+    results: "40% increase in conversion rate",
   },
   {
+    id: 2,
     title: "Fitness Tracker App",
     description: "Mobile app for tracking workouts and nutrition goals",
-    tags: ["React Native", "Firebase"],
+    longDescription: "Developed a cross-platform fitness application with workout logging, nutrition tracking, progress charts, and social features. Integrated with health APIs for automatic step counting and heart rate monitoring.",
+    tags: ["React Native", "Firebase", "HealthKit"],
     category: "Mobile",
+    results: "50K+ downloads in first month",
   },
   {
+    id: 3,
     title: "Brand Identity Package",
     description: "Complete visual identity for a tech startup",
-    tags: ["AI Design", "Branding"],
+    longDescription: "Created comprehensive brand guidelines including logo design, color palette, typography system, and marketing collateral. Used AI tools to generate unique visual elements and mockups.",
+    tags: ["AI Design", "Branding", "Figma"],
     category: "Graphics",
+    results: "Brand recognition increased 3x",
   },
   {
+    id: 4,
     title: "Task Management Dashboard",
     description: "Productivity app with real-time collaboration features",
-    tags: ["Next.js", "PostgreSQL"],
+    longDescription: "Built a collaborative task management platform with real-time updates, team workspaces, project timelines, and automated reporting. Features include drag-and-drop kanban boards and integrations with popular tools.",
+    tags: ["Next.js", "PostgreSQL", "WebSockets"],
     category: "Web",
+    results: "25% team productivity boost",
+  },
+  {
+    id: 5,
+    title: "Food Delivery App",
+    description: "On-demand food ordering and delivery platform",
+    longDescription: "Created a full-featured food delivery application with restaurant listings, real-time order tracking, payment processing, and driver management. Includes both customer and restaurant partner apps.",
+    tags: ["React Native", "Node.js", "Maps API"],
+    category: "Mobile",
+    results: "10K orders in first week",
+  },
+  {
+    id: 6,
+    title: "AI Marketing Assets",
+    description: "Automated social media graphics generation",
+    longDescription: "Developed an AI-powered system for generating consistent social media graphics, ad creatives, and promotional materials. Trained custom models for brand-specific visual styles.",
+    tags: ["AI Generation", "Automation", "Design"],
+    category: "Graphics",
+    results: "80% reduction in design time",
   },
 ];
 
+const testimonials = [
+  {
+    id: 1,
+    name: "Adaeze Okonkwo",
+    role: "CEO, TechStart Lagos",
+    content: "Creative Developer transformed our outdated website into a modern, conversion-focused platform. The attention to detail and quick turnaround exceeded our expectations.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Michael Adeyemi",
+    role: "Founder, FitLife App",
+    content: "The mobile app they built for us is absolutely stunning. Our users love the intuitive design and smooth performance. Highly recommend for any app project.",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Sarah Johnson",
+    role: "Marketing Director, BrandCo",
+    content: "The AI-generated graphics and brand identity work was exceptional. Fast delivery and the results speak for themselves - our brand looks premium and professional.",
+    rating: 5,
+  },
+];
+
+type FilterCategory = "All" | "Web" | "Mobile" | "Graphics";
+
 export default function Home() {
+  const [activeFilter, setActiveFilter] = useState<FilterCategory>("All");
+  const [expandedProject, setExpandedProject] = useState<number | null>(null);
+
+  const filteredProjects = activeFilter === "All" 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
+
+  const filterCategories: FilterCategory[] = ["All", "Web", "Mobile", "Graphics"];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -68,13 +135,21 @@ export default function Home() {
               <a href="#work" className="text-sm text-muted-foreground transition-colors hover:text-foreground" data-testid="link-work">
                 Work
               </a>
+              <a href="#testimonials" className="text-sm text-muted-foreground transition-colors hover:text-foreground" data-testid="link-testimonials">
+                Testimonials
+              </a>
               <a href="#contact" className="text-sm text-muted-foreground transition-colors hover:text-foreground" data-testid="link-contact">
                 Contact
               </a>
             </div>
-            <Button size="sm" data-testid="button-hire-me">
-              Hire Me
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <a href="#contact">
+                <Button size="sm" data-testid="button-hire-me">
+                  Hire Me
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
       </nav>
@@ -169,38 +244,106 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio/Work Section */}
+      {/* Portfolio/Work Section with Filtering */}
       <section id="work" className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-2xl font-semibold tracking-tight md:text-3xl" data-testid="text-work-title">
               Featured Work
             </h2>
-            <p className="text-muted-foreground" data-testid="text-work-subtitle">
+            <p className="mb-8 text-muted-foreground" data-testid="text-work-subtitle">
               A selection of recent projects
             </p>
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {filterCategories.map((category) => (
+                <Button
+                  key={category}
+                  variant={activeFilter === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveFilter(category)}
+                  data-testid={`button-filter-${category.toLowerCase()}`}
+                  className="toggle-elevate"
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
-            {projects.map((project, index) => (
-              <Card key={project.title} className="group overflow-visible hover-elevate" data-testid={`card-project-${index}`}>
+            {filteredProjects.map((project, index) => (
+              <Card 
+                key={project.id} 
+                className="group overflow-visible hover-elevate cursor-pointer" 
+                data-testid={`card-project-${project.id}`}
+                onClick={() => setExpandedProject(expandedProject === project.id ? null : project.id)}
+              >
                 <CardContent className="p-6">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <Badge variant="secondary" className="text-xs">
                       {project.category}
                     </Badge>
+                    {project.results && (
+                      <span className="text-xs text-muted-foreground">{project.results}</span>
+                    )}
                   </div>
-                  <h3 className="mb-2 text-lg font-semibold" data-testid={`text-project-title-${index}`}>
+                  <h3 className="mb-2 text-lg font-semibold" data-testid={`text-project-title-${project.id}`}>
                     {project.title}
                   </h3>
-                  <p className="mb-4 text-sm text-muted-foreground" data-testid={`text-project-description-${index}`}>
-                    {project.description}
+                  <p className="mb-4 text-sm text-muted-foreground" data-testid={`text-project-description-${project.id}`}>
+                    {expandedProject === project.id ? project.longDescription : project.description}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag, tagIndex) => (
-                      <Badge key={tag} variant="outline" className="text-xs" data-testid={`badge-tag-${index}-${tagIndex}`}>
-                        {tag}
-                      </Badge>
-                    ))}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag, tagIndex) => (
+                        <Badge key={tag} variant="outline" className="text-xs" data-testid={`badge-tag-${project.id}-${tagIndex}`}>
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-xs" data-testid={`button-view-case-study-${project.id}`}>
+                      {expandedProject === project.id ? "Less" : "Case Study"}
+                      <ExternalLink className="ml-1 h-3 w-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="border-t border-border bg-card">
+        <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight md:text-3xl" data-testid="text-testimonials-title">
+              What Clients Say
+            </h2>
+            <p className="text-muted-foreground" data-testid="text-testimonials-subtitle">
+              Feedback from people I've worked with
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {testimonials.map((testimonial, index) => (
+              <Card key={testimonial.id} className="border-card-border bg-background" data-testid={`card-testimonial-${index}`}>
+                <CardContent className="p-6">
+                  <Quote className="mb-4 h-8 w-8 text-muted-foreground/30" />
+                  <p className="mb-6 text-sm leading-relaxed text-muted-foreground" data-testid={`text-testimonial-content-${index}`}>
+                    "{testimonial.content}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
+                      {testimonial.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium" data-testid={`text-testimonial-name-${index}`}>
+                        {testimonial.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground" data-testid={`text-testimonial-role-${index}`}>
+                        {testimonial.role}
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -210,7 +353,7 @@ export default function Home() {
       </section>
 
       {/* Contact CTA Section */}
-      <section id="contact" className="border-t border-border bg-card">
+      <section id="contact" className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
           <div className="flex flex-col items-center text-center">
             <h2 className="mb-4 text-2xl font-semibold tracking-tight md:text-3xl" data-testid="text-contact-title">
